@@ -1,0 +1,95 @@
+using System;
+using System.Threading;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using KeyAuth;
+
+namespace YourProjectName
+{
+    internal static class Program
+    {
+        // KeyAuth instance
+        public static api KeyAuthApp = new api(
+            name: "",
+            ownerid: "",
+            version: "1.0"
+        );
+
+        // GLOBAL LOGIN STRING
+        public static string user;
+        public static string pass;
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+
+        [STAThread]
+        static void Main()
+        {
+            Console.Title = "Panel Login Access";
+
+            try
+            {
+                KeyAuthApp.init();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Init Failed:");
+                Console.WriteLine(ex.Message);
+
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadKey();
+
+                Environment.Exit(0);
+            }
+
+            Console.WriteLine("===== LOGIN PANEL =====\n");
+
+            Console.Write("Username : ");
+            user = Console.ReadLine();
+
+            Console.Write("Password : ");
+            pass = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
+            {
+                Console.WriteLine("\nUsername or Password empty ❌");
+
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+
+                Environment.Exit(0);
+            }
+
+            KeyAuthApp.login(user, pass);
+
+            if (KeyAuthApp.response.success)
+            {
+                Console.WriteLine("\nLogin Success ✅");
+
+                Thread.Sleep(800);
+
+                var handle = GetConsoleWindow();
+                ShowWindow(handle, SW_HIDE);
+
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form1());
+            }
+            else
+            {
+                Console.WriteLine("\nLogin Failed ❌");
+                Console.WriteLine(KeyAuthApp.response.message);
+
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadKey();
+
+                Environment.Exit(0);
+            }
+        }
+    }
+}
