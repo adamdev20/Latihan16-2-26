@@ -3,253 +3,264 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minicraft Portfolio Interactive</title>
+<title>Adam Snyder Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family: monospace;
+    font-family:'Inter', sans-serif;
 }
 
-/* BACKGROUND */
 body{
-    background: linear-gradient(#7ec850,#4f7d33,#2f4f1f);
-    min-height:100vh;
-    color:white;
+    background:#0b0f17;
+    color:#e5e7eb;
 }
 
-/* TOP */
-.topbar{
-    background:#222;
-    padding:10px;
-    text-align:center;
-    border-bottom:4px solid #000;
-}
-
-/* LAYOUT */
-.container{
+/* NAV */
+nav{
     display:flex;
-    flex-wrap:wrap;
-    gap:15px;
-    padding:20px;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 50px;
+    position:fixed;
+    width:100%;
+    top:0;
+    background:rgba(11,15,23,0.7);
+    backdrop-filter: blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    z-index:1000;
 }
 
-/* BLOCK */
-.block{
-    width:300px;
-    background:#8b8b8b;
-    border:4px solid #333;
-    box-shadow:4px 4px 0 #000;
-    padding:10px;
+nav h1{
+    font-size:14px;
+    letter-spacing:2px;
+    font-weight:600;
 }
 
-.block h3{
-    background:#444;
-    margin:-10px -10px 10px -10px;
-    padding:6px;
-    border-bottom:3px solid #000;
+.nav-links{
+    display:flex;
+    gap:25px;
 }
 
-/* BUTTON */
-.btn{
-    margin-top:8px;
-    background:#3b7c2a;
-    padding:6px;
-    text-align:center;
-    cursor:pointer;
-    border:2px solid #1f3d14;
-    box-shadow:2px 2px 0 #000;
-}
-
-.btn:hover{
-    background:#4caf50;
-}
-
-/* INVENTORY BLOCKS */
-.grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:5px;
-    margin-top:10px;
-}
-
-.slot{
-    height:45px;
-    background:#666;
-    border:3px solid #222;
-    box-shadow:inset 2px 2px 0 #aaa;
-    cursor:pointer;
+.nav-links a{
+    text-decoration:none;
+    color:#9ca3af;
+    font-size:14px;
     transition:0.2s;
 }
 
-.slot:hover{
-    background:#888;
-    transform:scale(1.05);
+.nav-links a:hover{
+    color:white;
 }
 
-/* TERMINAL */
-.terminal{
-    background:black;
-    color:#00ff99;
-    padding:10px;
-    margin-top:10px;
-    height:160px;
-    overflow:auto;
-    border:3px inset #555;
-}
-
-/* INPUT */
-input{
-    width:100%;
-    padding:6px;
-    margin-top:5px;
-    border:2px solid #000;
-    background:#111;
-    color:#00ff99;
-    outline:none;
+.menu{
+    display:none;
+    font-size:22px;
+    cursor:pointer;
 }
 
 /* HERO */
 .hero{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
     text-align:center;
-    padding:15px;
+    padding:0 20px;
 }
 
-.hero h1{
-    text-shadow:2px 2px 0 #000;
+.hero h2{
+    font-size:44px;
+    font-weight:600;
+    letter-spacing:-1px;
+}
+
+.hero p{
+    margin-top:10px;
+    color:#9ca3af;
+    max-width:500px;
+}
+
+/* BUTTON */
+.btn{
+    margin-top:25px;
+    padding:10px 18px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.03);
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.btn:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+/* SECTION */
+section{
+    padding:90px 50px;
+}
+
+.title{
+    font-size:18px;
+    margin-bottom:20px;
+    color:#fff;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    padding:20px;
+    border-radius:14px;
+    transition:0.2s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(255,255,255,0.15);
+}
+
+.card p{
+    color:#9ca3af;
+    font-size:14px;
+    margin-top:8px;
+}
+
+/* TERMINAL */
+.terminal{
+    margin-top:20px;
+    background:#070a10;
+    border:1px solid rgba(255,255,255,0.08);
+    padding:15px;
+    border-radius:12px;
+    font-family:monospace;
+    color:#34d399;
+    font-size:13px;
 }
 
 /* MOBILE */
 @media(max-width:768px){
-    .block{width:100%;}
+    .nav-links{
+        position:absolute;
+        top:60px;
+        right:20px;
+        flex-direction:column;
+        background:#0b0f17;
+        border:1px solid rgba(255,255,255,0.08);
+        padding:15px;
+        border-radius:12px;
+        display:none;
+    }
+
+    .nav-links.active{
+        display:flex;
+    }
+
+    .menu{
+        display:block;
+    }
+
+    section{
+        padding:70px 20px;
+    }
+
+    .hero h2{
+        font-size:32px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-🟩 MINICRAFT INTERACTIVE WORLD - $adamsnyder
-</div>
+<nav>
+    <h1>ADAM SNYDER</h1>
 
+    <div class="nav-links" id="nav">
+        <a href="#about">About</a>
+        <a href="#project">Projects</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <div class="menu" onclick="toggleMenu()">☰</div>
+</nav>
+
+<!-- HERO -->
 <div class="hero">
-    <h1>WELCOME PLAYER</h1>
-    <p>Type commands in console below</p>
+    <h2>Enterprise Portfolio</h2>
+    <p>Clean, minimal, and scalable UI system designed for modern web experiences.</p>
+    <button class="btn" onclick="scrollToAbout()">View Work</button>
 </div>
 
-<div class="container">
+<!-- ABOUT -->
+<section id="about">
+    <div class="title">About</div>
 
-    <!-- ABOUT -->
-    <div class="block">
-        <h3>ABOUT</h3>
-        <p>Player: Adam Snyder</p>
-        <p>Class: Web Builder</p>
-        <p>Status: Online</p>
+    <div class="card">
+        <p>Web Developer focused on modern UI systems, clean architecture, and scalable design.</p>
+
+        <div class="terminal">
+$adamsnyder@enterprise:~$ whoami  
+Adam Snyder  
+Role: UI/UX & Web Developer  
+Status: Building scalable systems  
+        </div>
     </div>
+</section>
 
-    <!-- INVENTORY -->
-    <div class="block">
-        <h3>INVENTORY (click block)</h3>
+<!-- PROJECTS -->
+<section id="project">
+    <div class="title">Projects</div>
 
-        <div class="grid">
-            <div class="slot" onclick="clickBlock(this)"></div>
-            <div class="slot" onclick="clickBlock(this)"></div>
-            <div class="slot" onclick="clickBlock(this)"></div>
-            <div class="slot" onclick="clickBlock(this)"></div>
-            <div class="slot" onclick="clickBlock(this)"></div>
-            <div class="slot" onclick="clickBlock(this)"></div>
+    <div class="grid">
+        <div class="card">
+            <strong>Dashboard UI</strong>
+            <p>Enterprise analytics dashboard design system.</p>
         </div>
 
-        <div class="btn" onclick="breakAll()">Break All Blocks</div>
-    </div>
-
-    <!-- TERMINAL -->
-    <div class="block">
-        <h3>CONSOLE</h3>
-
-        <div class="terminal" id="terminal">
-$adamsnyder@mc:~$ welcome  
-system loaded...  
-type "help" for commands  
+        <div class="card">
+            <strong>Landing System</strong>
+            <p>High conversion SaaS landing pages.</p>
         </div>
 
-        <input id="cmd" placeholder="type command..." onkeydown="handleKey(event)">
+        <div class="card">
+            <strong>Portfolio Engine</strong>
+            <p>Reusable portfolio template system.</p>
+        </div>
     </div>
+</section>
 
-</div>
+<!-- CONTACT -->
+<section id="contact">
+    <div class="title">Contact</div>
+
+    <div class="card">
+        <p>Email: example@mail.com</p>
+        <p>Discord: adamsnyder</p>
+    </div>
+</section>
 
 <script>
 
-const terminal = document.getElementById("terminal");
-
-/* TYPE EFFECT */
-function typeLine(text){
-    let i = 0;
-    let line = document.createElement("div");
-    terminal.appendChild(line);
-
-    let interval = setInterval(()=>{
-        line.innerHTML += text[i];
-        i++;
-        terminal.scrollTop = terminal.scrollHeight;
-
-        if(i >= text.length){
-            clearInterval(interval);
-        }
-    },30);
+function toggleMenu(){
+    document.getElementById("nav").classList.toggle("active");
 }
 
-/* COMMAND SYSTEM */
-function handleKey(e){
-    if(e.key === "Enter"){
-        let cmd = e.target.value;
-        e.target.value = "";
-
-        terminal.innerHTML += "\n$adamsnyder@mc:~$ " + cmd;
-
-        if(cmd === "help"){
-            typeLine("commands: help, status, clear, build");
-        }
-        else if(cmd === "status"){
-            typeLine("All systems online ✔");
-        }
-        else if(cmd === "clear"){
-            terminal.innerHTML = "";
-        }
-        else if(cmd === "build"){
-            typeLine("Building world... ████████ 100%");
-        }
-        else{
-            typeLine("unknown command: " + cmd);
-        }
-    }
-}
-
-/* BLOCK CLICK EFFECT */
-function clickBlock(el){
-    el.style.background = "#ffcc00";
-    el.innerText = "★";
-    setTimeout(()=>{
-        el.style.background = "#666";
-        el.innerText = "";
-    },500);
-}
-
-/* BREAK ALL */
-function breakAll(){
-    document.querySelectorAll(".slot").forEach((b)=>{
-        b.style.background="#222";
-        b.innerText="X";
-    });
-
-    setTimeout(()=>{
-        document.querySelectorAll(".slot").forEach((b)=>{
-            b.style.background="#666";
-            b.innerText="";
-        });
-    },1000);
+function scrollToAbout(){
+    document.getElementById("about").scrollIntoView({behavior:"smooth"});
 }
 
 </script>
