@@ -1,812 +1,238 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumière — Studio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pro Portfolio</title>
 
-  :root {
-    --cream: #F7F4EF;
-    --sand: #E8E2D9;
-    --taupe: #C4B9A8;
-    --warm-gray: #8C8278;
-    --charcoal: #2D2926;
-    --ink: #1A1714;
-    --accent: #8B7355;
-    --transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    background-color: var(--cream);
-    color: var(--charcoal);
-    overflow-x: hidden;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 4rem;
-    mix-blend-mode: normal;
-    transition: background var(--transition), padding var(--transition);
-  }
-  nav.scrolled {
-    background: rgba(247, 244, 239, 0.92);
-    backdrop-filter: blur(12px);
-    padding: 1.2rem 4rem;
-    border-bottom: 1px solid var(--sand);
-  }
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    color: var(--ink);
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 0.78rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--warm-gray);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--ink); }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 4rem 6rem;
-    position: relative;
-    z-index: 2;
-  }
-  .hero-eyebrow {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.9s var(--transition) 0.2s forwards;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3.5rem, 6vw, 5.5rem);
-    font-weight: 300;
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    margin-bottom: 2rem;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeUp 1s var(--transition) 0.4s forwards;
-  }
-  .hero-title em {
-    font-style: italic;
-    color: var(--accent);
-  }
-  .hero-sub {
-    font-size: 0.9rem;
-    font-weight: 300;
-    line-height: 1.8;
-    color: var(--warm-gray);
-    max-width: 340px;
-    margin-bottom: 3rem;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.9s var(--transition) 0.6s forwards;
-  }
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    text-decoration: none;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.9s var(--transition) 0.8s forwards;
-  }
-  .cta-text {
-    font-size: 0.78rem;
-    font-weight: 400;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-  .cta-line {
-    width: 40px;
-    height: 1px;
-    background: var(--ink);
-    transition: width 0.4s;
-  }
-  .hero-cta:hover .cta-line { width: 70px; }
-
-  .hero-right {
-    position: relative;
-    background: var(--sand);
-    overflow: hidden;
-  }
-  .hero-img-wrap {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    animation: fadeIn 1.4s ease 0.3s forwards;
-  }
-  .hero-image-bg {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(160deg, #E8E2D9 0%, #D4C9B8 40%, #C4B5A0 100%);
-    position: relative;
-  }
-  .hero-image-bg::before {
-    content: '';
-    position: absolute;
-    top: 25%; left: 20%;
-    width: 55%; height: 55%;
-    border: 1px solid rgba(139, 115, 85, 0.25);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    animation: float 8s ease-in-out infinite;
-  }
-  .hero-image-bg::after {
-    content: '';
-    position: absolute;
-    top: 35%; left: 30%;
-    width: 35%; height: 35%;
-    border: 1px solid rgba(139, 115, 85, 0.15);
-    border-radius: 50%;
-    animation: float 8s ease-in-out infinite reverse;
-  }
-  .hero-num {
-    position: absolute;
-    bottom: 2.5rem;
-    right: 2.5rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 7rem;
-    font-weight: 300;
-    color: rgba(139, 115, 85, 0.12);
-    line-height: 1;
-    user-select: none;
-  }
-  .scroll-indicator {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.4s forwards;
-  }
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: var(--taupe);
-    animation: scrollAnim 1.8s ease-in-out infinite;
-  }
-  .scroll-txt {
-    font-size: 0.68rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--taupe);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-  }
-
-  /* SECTION SHARED */
-  section { padding: 8rem 4rem; }
-
-  .section-label {
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-
-  /* ABOUT */
-  .about {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
-  }
-  .about-visual {
-    aspect-ratio: 4/5;
-    background: var(--sand);
-    border-radius: 2px;
-    position: relative;
-    overflow: hidden;
-  }
-  .about-visual-inner {
-    position: absolute;
-    inset: 1.5rem;
-    background: linear-gradient(135deg, #D4C9B8 0%, #BFB09C 100%);
-    border-radius: 2px;
-  }
-  .about-visual-line {
-    position: absolute;
-    bottom: 2rem; right: -0.5rem;
-    width: 60%; height: 1px;
-    background: var(--accent);
-    opacity: 0.4;
-  }
-  .about-content h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.2rem, 3.5vw, 3.2rem);
-    font-weight: 300;
-    line-height: 1.2;
-    color: var(--ink);
-    margin-bottom: 1.5rem;
-  }
-  .about-content p {
-    font-size: 0.9rem;
-    line-height: 1.9;
-    color: var(--warm-gray);
-    margin-bottom: 1rem;
-  }
-  .about-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 3rem;
-    padding-top: 2.5rem;
-    border-top: 1px solid var(--sand);
-  }
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
-    font-weight: 300;
-    color: var(--ink);
-    display: block;
-  }
-  .stat-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--taupe);
-    margin-top: 0.3rem;
-    display: block;
-  }
-
-  /* SERVICES */
-  .services-section {
-    background: var(--ink);
-    color: var(--cream);
-  }
-  .services-section .section-label { color: var(--taupe); }
-  .services-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 5rem;
-  }
-  .services-header h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.5rem, 4vw, 3.8rem);
-    font-weight: 300;
-    line-height: 1.1;
-    max-width: 480px;
-  }
-  .services-header p {
-    font-size: 0.85rem;
-    line-height: 1.8;
-    color: var(--taupe);
-    max-width: 280px;
-    text-align: right;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid rgba(196, 185, 168, 0.2);
-  }
-  .service-item {
-    padding: 2.5rem 2rem 2.5rem 0;
-    border-right: 1px solid rgba(196, 185, 168, 0.15);
-    transition: background var(--transition);
-    cursor: default;
-  }
-  .service-item:last-child { border-right: none; padding-right: 0; }
-  .service-item:first-child { padding-left: 0; }
-  .service-item:hover { background: rgba(255,255,255,0.02); }
-  .service-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.9rem;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    display: block;
-  }
-  .service-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 300;
-    color: var(--cream);
-    margin-bottom: 0.8rem;
-    line-height: 1.25;
-  }
-  .service-desc {
-    font-size: 0.82rem;
-    line-height: 1.85;
-    color: var(--warm-gray);
-  }
-
-  /* WORK */
-  .work-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5px;
-    margin-top: 4rem;
-    background: var(--sand);
-  }
-  .work-item {
-    aspect-ratio: 4/3;
-    background: var(--cream);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .work-item:nth-child(1) .work-img { background: linear-gradient(135deg, #D4C9B8, #BFB09C); }
-  .work-item:nth-child(2) .work-img { background: linear-gradient(135deg, #C9BFB0, #B5A895); }
-  .work-item:nth-child(3) .work-img { background: linear-gradient(135deg, #DDD6CB, #C8BDB0); }
-  .work-item:nth-child(4) .work-img { background: linear-gradient(135deg, #CAC0B3, #B8AD9F); }
-  .work-img {
-    position: absolute;
-    inset: 0;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .work-item:hover .work-img { transform: scale(1.04); }
-  .work-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(26,23,20,0.7) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    display: flex;
-    align-items: flex-end;
-    padding: 2rem;
-  }
-  .work-item:hover .work-overlay { opacity: 1; }
-  .work-meta { color: var(--cream); }
-  .work-cat {
-    font-size: 0.68rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--taupe);
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-  .work-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    font-weight: 300;
-  }
-  .work-item:first-child {
-    grid-row: span 2;
-    aspect-ratio: unset;
-  }
-
-  /* TESTIMONIAL */
-  .testimonial-section {
-    background: var(--sand);
-    text-align: center;
-  }
-  .testimonial-quote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 300;
-    font-style: italic;
-    line-height: 1.5;
-    color: var(--ink);
-    max-width: 760px;
-    margin: 2rem auto 2.5rem;
-  }
-  .testimonial-author {
-    font-size: 0.78rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--warm-gray);
-  }
-  .quote-mark {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 5rem;
-    line-height: 0.6;
-    color: var(--taupe);
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  /* CTA SECTION */
-  .cta-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 50vh;
-  }
-  .cta-left {
-    background: var(--charcoal);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem 4rem;
-  }
-  .cta-left h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.5rem, 4vw, 3.5rem);
-    font-weight: 300;
-    color: var(--cream);
-    line-height: 1.15;
-    margin-bottom: 2.5rem;
-  }
-  .cta-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    background: transparent;
-    border: 1px solid rgba(196, 185, 168, 0.4);
-    color: var(--cream);
-    padding: 1rem 2rem;
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 0.78rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.4s, border-color 0.4s;
-    width: fit-content;
-  }
-  .cta-btn:hover {
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(196, 185, 168, 0.7);
-  }
-  .cta-right {
-    background: var(--accent);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem 4rem;
-  }
-  .cta-right p {
-    font-size: 0.82rem;
-    line-height: 1.9;
-    color: rgba(247, 244, 239, 0.7);
-    margin-bottom: 2rem;
-    max-width: 340px;
-  }
-  .cta-right a {
-    color: var(--cream);
-    font-size: 1.1rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(247, 244, 239, 0.4);
-    padding-bottom: 2px;
-    transition: border-color 0.3s;
-  }
-  .cta-right a:hover { border-color: var(--cream); }
-
-  /* FOOTER */
-  footer {
-    padding: 3rem 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--sand);
-  }
-  .footer-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-weight: 400;
-    letter-spacing: 0.15em;
-    color: var(--ink);
-  }
-  .footer-copy {
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    color: var(--taupe);
-  }
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-  .footer-links a {
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--warm-gray);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .footer-links a:hover { color: var(--ink); }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-12px) scale(1.02); }
-  }
-  @keyframes scrollAnim {
-    0% { transform: scaleY(0); transform-origin: top; }
-    50% { transform: scaleY(1); transform-origin: top; }
-    51% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
-  }
-
-  /* REVEAL ON SCROLL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.9s var(--transition), transform 0.9s var(--transition);
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 1.5rem 2rem; }
-    .hero { grid-template-columns: 1fr; }
-    .hero-right { display: none; }
-    .hero-left { padding: 8rem 2rem 5rem; justify-content: flex-end; min-height: 100vh; }
-    .about, .cta-section { grid-template-columns: 1fr; }
-    .about-visual { aspect-ratio: 16/9; }
-    section { padding: 5rem 2rem; }
-    .services-header { flex-direction: column; gap: 1.5rem; }
-    .services-header p { text-align: left; }
-    .services-grid { grid-template-columns: 1fr; }
-    .service-item { border-right: none; border-bottom: 1px solid rgba(196, 185, 168, 0.15); padding: 2rem 0; }
-    .work-grid { grid-template-columns: 1fr; }
-    .work-item:first-child { grid-row: unset; }
-    footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2.5rem 2rem; }
-    .cta-left, .cta-right { padding: 4rem 2rem; }
-  }
-</style>
+  <style>
+    body { background: #060912; }
+    .glow { text-shadow: 0 0 12px rgba(59,130,246,0.9); }
+  </style>
 </head>
-<body>
 
-<nav id="navbar">
-  <a href="#" class="nav-logo">Lumière</a>
-  <ul class="nav-links">
-    <li><a href="#about">Tentang</a></li>
-    <li><a href="#services">Layanan</a></li>
-    <li><a href="#work">Karya</a></li>
-    <li><a href="#contact">Kontak</a></li>
-  </ul>
-</nav>
+<body class="text-white">
+<div id="root"></div>
 
-<!-- HERO -->
-<section class="hero" style="padding: 0;">
-  <div class="hero-left">
-    <span class="hero-eyebrow">Studio Desain — Jakarta</span>
-    <h1 class="hero-title">
-      Keindahan dalam<br><em>Kesederhanaan</em>
-    </h1>
-    <p class="hero-sub">
-      Kami menciptakan identitas visual yang abadi — tempat estetika bertemu strategi, dan setiap detail bercerita.
-    </p>
-    <a href="#work" class="hero-cta">
-      <span class="cta-text">Lihat Karya</span>
-      <span class="cta-line"></span>
-    </a>
-  </div>
-  <div class="hero-right">
-    <div class="hero-img-wrap">
-      <div class="hero-image-bg"></div>
-    </div>
-    <span class="hero-num">01</span>
-  </div>
-  <div class="scroll-indicator">
-    <span class="scroll-line"></span>
-    <span class="scroll-txt">Gulir</span>
-  </div>
-</section>
+<script type="text/babel">
 
-<!-- ABOUT -->
-<section id="about" style="padding: 8rem 4rem;">
-  <div class="about reveal">
-    <div class="about-visual">
-      <div class="about-visual-inner"></div>
-      <div class="about-visual-line"></div>
-    </div>
-    <div class="about-content">
-      <span class="section-label">Tentang Kami</span>
-      <h2>Desain yang Hidup<br>Melampaui Waktu</h2>
-      <p>
-        Lumière Studio adalah ruang kreatif yang percaya bahwa desain terbaik lahir dari keheningan — bukan keramaian. Setiap proyek kami dekati dengan ketelitian, rasa hormat terhadap konteks, dan kecintaan mendalam pada detail.
-      </p>
-      <p>
-        Berbasis di Jakarta, kami melayani klien yang menghargai substansi di balik gaya — merek-merek yang ingin diingat bukan karena kebisingan, tetapi karena kehadiran.
-      </p>
-      <div class="about-stats">
-        <div>
-          <span class="stat-num">08</span>
-          <span class="stat-label">Tahun Berdiri</span>
+const { useState, useEffect } = React;
+
+/* Typing */
+function useTyping(text, speed=55){
+  const [out, setOut] = useState("");
+
+  useEffect(()=>{
+    let i = 0;
+    const t = setInterval(()=>{
+      setOut(text.slice(0, i));
+      i++;
+      if(i > text.length) clearInterval(t);
+    }, speed);
+    return ()=>clearInterval(t);
+  }, [text]);
+
+  return out;
+}
+
+/* Navbar */
+function Navbar({open, setOpen}){
+  return (
+    <div className="fixed top-0 w-full bg-black/40 backdrop-blur border-b border-blue-500/10 z-50">
+      <div className="max-w-5xl mx-auto flex justify-between items-center p-4">
+        <h1 className="text-blue-400 font-bold glow">Adam.dev</h1>
+
+        <div className="hidden md:flex gap-6 text-sm text-gray-300">
+          <a href="#home" className="hover:text-blue-400">Home</a>
+          <a href="#about" className="hover:text-blue-400">About</a>
+          <a href="#project" className="hover:text-blue-400">Projects</a>
+          <a href="#contact" className="hover:text-blue-400">Contact</a>
         </div>
-        <div>
-          <span class="stat-num">140+</span>
-          <span class="stat-label">Proyek Selesai</span>
-        </div>
-        <div>
-          <span class="stat-num">32</span>
-          <span class="stat-label">Penghargaan</span>
-        </div>
+
+        <button onClick={()=>setOpen(!open)} className="md:hidden text-blue-400">
+          ☰
+        </button>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- SERVICES -->
-<section id="services" class="services-section reveal" style="padding: 8rem 4rem;">
-  <div class="services-header">
-    <div>
-      <span class="section-label">Yang Kami Lakukan</span>
-      <h2>Layanan<br>Kami</h2>
-    </div>
-    <p>Setiap disiplin yang kami tawarkan saling terhubung — dirancang untuk menciptakan pengalaman yang kohesif dan bermakna.</p>
-  </div>
-  <div class="services-grid">
-    <div class="service-item" style="padding-left: 0;">
-      <span class="service-num">01</span>
-      <h3 class="service-title">Identitas<br>Merek</h3>
-      <p class="service-desc">Logo, tipografi, panduan warna, dan sistem visual yang mencerminkan siapa Anda sebenarnya.</p>
-    </div>
-    <div class="service-item" style="padding-left: 2rem;">
-      <span class="service-num">02</span>
-      <h3 class="service-title">Desain<br>Digital</h3>
-      <p class="service-desc">Website, aplikasi, dan antarmuka digital yang intuitif sekaligus indah untuk dilihat.</p>
-    </div>
-    <div class="service-item" style="padding-left: 2rem;">
-      <span class="service-num">03</span>
-      <h3 class="service-title">Strategi<br>Kreatif</h3>
-      <p class="service-desc">Konsultasi mendalam untuk menyelaraskan visi estetika dengan tujuan bisnis jangka panjang.</p>
-    </div>
-  </div>
-</section>
-
-<!-- WORK -->
-<section id="work" style="padding: 8rem 4rem;">
-  <div class="reveal">
-    <span class="section-label">Portofolio</span>
-    <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 3.5vw, 3.2rem); font-weight: 300; color: var(--ink); margin-top: 0.5rem;">Karya Pilihan</h2>
-  </div>
-  <div class="work-grid reveal">
-    <div class="work-item">
-      <div class="work-img"></div>
-      <div class="work-overlay">
-        <div class="work-meta">
-          <span class="work-cat">Identitas Merek</span>
-          <span class="work-name">Maison Serat</span>
+      {open && (
+        <div className="md:hidden px-6 pb-4 flex flex-col gap-2 text-sm text-gray-300">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#project">Projects</a>
+          <a href="#contact">Contact</a>
         </div>
-      </div>
+      )}
     </div>
-    <div class="work-item">
-      <div class="work-img"></div>
-      <div class="work-overlay">
-        <div class="work-meta">
-          <span class="work-cat">Desain Digital</span>
-          <span class="work-name">Arkana Studio</span>
+  );
+}
+
+/* Hero */
+function Hero(){
+  const text = useTyping("Hi, I'm Frontend Developer ⚡", 60);
+
+  return (
+    <section id="home" className="h-screen flex items-center justify-center text-center px-6">
+      <div>
+        <h1 className="text-4xl md:text-6xl font-bold text-blue-400 glow">
+          {text}
+        </h1>
+
+        <p className="text-gray-400 mt-4 text-sm md:text-base">
+          Clean UI • Scalable Frontend • Modern Web Experience
+        </p>
+
+        <a href="#project"
+           className="inline-block mt-7 px-6 py-3 bg-blue-600 rounded-xl hover:scale-105 transition shadow-lg shadow-blue-500/20">
+          Explore Projects
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* About PRO */
+function About(){
+  return (
+    <section id="about" className="max-w-5xl mx-auto px-6 py-20">
+      <h2 className="text-blue-400 text-xl font-bold mb-6">About</h2>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        
+        <div className="bg-white/5 border border-blue-500/10 rounded-xl p-6">
+          <p className="text-gray-300 leading-relaxed">
+            Saya frontend developer yang fokus membangun interface modern,
+            responsive, dan user-friendly. Saya suka desain minimal tapi terasa premium.
+          </p>
+
+          <p className="text-gray-400 mt-4 text-sm">
+            Saat ini saya mendalami React ecosystem, UI animation, dan frontend architecture.
+          </p>
         </div>
-      </div>
-    </div>
-    <div class="work-item">
-      <div class="work-img"></div>
-      <div class="work-overlay">
-        <div class="work-meta">
-          <span class="work-cat">Kemasan</span>
-          <span class="work-name">Tanah Rempah</span>
+
+        <div className="bg-black/30 border border-blue-500/10 rounded-xl p-6">
+          <h3 className="text-blue-300 font-semibold mb-3">Tech Stack</h3>
+
+          <div className="flex flex-wrap gap-2 text-xs">
+            {["React","Tailwind","JavaScript","HTML","Git","UI Design"].map((s)=>(
+              <span key={s}
+                className="px-3 py-1 bg-blue-600/20 border border-blue-500/10 rounded-lg">
+                {s}
+              </span>
+            ))}
+          </div>
         </div>
+
       </div>
-    </div>
-    <div class="work-item">
-      <div class="work-img"></div>
-      <div class="work-overlay">
-        <div class="work-meta">
-          <span class="work-cat">Strategi Kreatif</span>
-          <span class="work-name">Nirwana Hotel</span>
+    </section>
+  );
+}
+
+/* Project PRO */
+function Project(){
+  const project = {
+    name: "Cyber Portfolio v2",
+    desc: "A modern responsive portfolio built with React + Tailwind focusing on clean UI, performance, and smooth UX.",
+    github: "https://github.com/username/project",
+    demo: "https://project-demo.vercel.app"
+  };
+
+  return (
+    <section id="project" className="max-w-5xl mx-auto px-6 py-10">
+      <h2 className="text-blue-400 text-xl font-bold mb-6">Project</h2>
+
+      <div className="bg-white/5 border border-blue-500/10 rounded-xl p-6 hover:scale-[1.02] transition">
+
+        <div className="flex justify-between items-start">
+          <h3 className="text-blue-300 font-bold">{project.name}</h3>
+          <span className="text-xs text-gray-500">Featured</span>
         </div>
+
+        <p className="text-gray-400 mt-3 text-sm leading-relaxed">
+          {project.desc}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2 text-xs">
+          <span className="px-3 py-1 bg-blue-600/20 rounded-lg">React</span>
+          <span className="px-3 py-1 bg-blue-600/20 rounded-lg">Tailwind</span>
+          <span className="px-3 py-1 bg-blue-600/20 rounded-lg">Responsive</span>
+        </div>
+
+        <div className="mt-6 flex gap-4 text-sm">
+          <a
+            href={project.github}
+            target="_blank"
+            className="px-4 py-2 border border-blue-500/30 rounded-lg hover:bg-blue-600/20 transition"
+          >
+            GitHub
+          </a>
+
+          <a
+            href={project.demo}
+            target="_blank"
+            className="px-4 py-2 bg-blue-600 rounded-lg hover:scale-105 transition shadow-md shadow-blue-500/20"
+          >
+            Live Demo
+          </a>
+        </div>
+
       </div>
-    </div>
-  </div>
-</section>
+    </section>
+  );
+}
 
-<!-- TESTIMONIAL -->
-<section class="testimonial-section reveal">
-  <span class="quote-mark">"</span>
-  <p class="testimonial-quote">
-    Lumière tidak hanya mendesain — mereka menerjemahkan jiwa merek kami menjadi sesuatu yang terasa hidup dan nyata.
-  </p>
-  <span class="testimonial-author">— Dinda Rahayu, Pendiri Maison Serat</span>
-</section>
+/* Contact PRO */
+function Contact(){
+  return (
+    <section id="contact" className="max-w-4xl mx-auto px-6 py-20">
+      <h2 className="text-blue-400 text-xl font-bold mb-4">Contact</h2>
 
-<!-- CTA -->
-<div id="contact" class="cta-section reveal">
-  <div class="cta-left">
-    <h2>Siap Memulai<br>Sesuatu yang<br>Bermakna?</h2>
-    <a href="#" class="cta-btn">
-      Mulai Percakapan →
-    </a>
-  </div>
-  <div class="cta-right">
-    <span class="section-label" style="color: rgba(247, 244, 239, 0.5);">Hubungi Kami</span>
-    <p>
-      Kami menerima proyek baru dengan selektif — bukan karena eksklusivitas, tetapi karena kami percaya setiap klien layak mendapat perhatian penuh.
-    </p>
-    <a href="mailto:halo@lumiere.id">halo@lumiere.id</a>
-  </div>
-</div>
+      <div className="bg-white/5 border border-blue-500/10 rounded-xl p-6">
+        
+        <div className="flex flex-col gap-3 text-sm">
 
-<!-- FOOTER -->
-<footer>
-  <span class="footer-logo">Lumière</span>
-  <span class="footer-copy">© 2026 Lumière Studio. Jakarta, Indonesia.</span>
-  <ul class="footer-links">
-    <li><a href="#">Instagram</a></li>
-    <li><a href="#">Behance</a></li>
-    <li><a href="#">LinkedIn</a></li>
-  </ul>
-</footer>
+          <div className="flex justify-between items-center bg-black/30 p-3 rounded-lg">
+            <span className="text-gray-300">Email</span>
+            <span className="text-blue-400">youremail@gmail.com</span>
+          </div>
 
-<script>
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 60);
-  });
+          <div className="flex justify-between items-center bg-black/30 p-3 rounded-lg">
+            <span className="text-gray-300">WhatsApp</span>
+            <span className="text-blue-400">+62 8xx-xxxx-xxxx</span>
+          </div>
 
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  reveals.forEach(el => observer.observe(el));
+        </div>
 
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
-    });
-  });
+      </div>
+    </section>
+  );
+}
+
+/* App */
+function App(){
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Navbar open={open} setOpen={setOpen}/>
+      <Hero/>
+      <About/>
+      <Project/>
+      <Contact/>
+
+      <footer className="text-center text-gray-600 py-10 text-xs">
+        © 2026 Adam.dev — Built with React + Tailwind
+      </footer>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+
 </script>
 </body>
 </html>
